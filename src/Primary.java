@@ -21,11 +21,23 @@ public class Primary{
   private static final int BALLYRADIUS = 20;
   private static final int BALLXSPEED = 5;
   private static final int BALLYSPEED = 1;
-  private static final boolean DIFFICULTY_IS_HARD = true; // True= hard : False = easy
   
   public static void main(String[] args){
+    boolean isHard = true;
+    int topBarrier = 0;
+    int bottomBarrier = 0;
+
+    if (isHard == false) {
+     topBarrier = - 10;
+     bottomBarrier = WINDOWHEIGHT + 50;
+    } else {
+      topBarrier = 20;
+      bottomBarrier = WINDOWHEIGHT - 50;
+    }
+
+
     //Initialize Window
-    GameWindow gameWindow = new GameWindow(WINDOWWIDTH, WINDOWHEIGHT, PADDLEWIDTH, PADDLEHEIGHT, BALLXRADIUS, BALLYRADIUS, BALLXSPEED, BALLYSPEED);
+    GameWindow gameWindow = new GameWindow(WINDOWWIDTH, WINDOWHEIGHT, PADDLEWIDTH, PADDLEHEIGHT, BALLXRADIUS, BALLYRADIUS, BALLXSPEED, BALLYSPEED, topBarrier, bottomBarrier);
     
     //Create Objects
     GameLoopTimer gameLoopTimer = new GameLoopTimer();
@@ -37,10 +49,7 @@ public class Primary{
       exit = gameWindow.isExit();
       gameWindow.changePlayerPaddleDirection();
       gameWindow.changePCPaddleDirection();
-      if (DIFFICULTY_IS_HARD)
-        gameWindow.changeBallDirectionHard(); // Handles collision detection
-      else
-        gameWindow.changeBallDirectionEasy(); // Handles collision detection
+      gameWindow.changeBallDirection(); // Handles collision detection
       gameLoopTimer.runTimer();
     }
     System.exit(0);

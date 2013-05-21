@@ -18,7 +18,6 @@ public class GameWindow extends JPanel implements KeyListener{
   
   //Define Objects
   JFrame gameWindow;
-  JPanel gamePanel;
   Paddle playerPaddle;
   Paddle pcPaddle;
   Ball ball;
@@ -41,20 +40,23 @@ public class GameWindow extends JPanel implements KeyListener{
   private int playerStartXPosition;
   private int playerStartYPosition;
   private int pcStartXPosition; 
-  private int pcStartYPosition; 
+  private int pcStartYPosition;
+  private int topBarrier;
+  private int bottombarrier;
 
   
-  public GameWindow(int windowWidth, int windowHeight, int paddleWidth, int paddleHeight, int ballXRadius, int ballYRadius, int ballXSpeed, int ballYSpeed){
+  public GameWindow(int windowWidth, int windowHeight, int paddleWidth, int paddleHeight, int ballXRadius, int ballYRadius, int ballXSpeed, int ballYSpeed, int topBarrier, int bottomBarrier){
     //Set Window
     gameWindow = new JFrame("Pong");
     this.windowWidth = windowWidth;
     this.windowHeight = windowHeight;
+    setSize(windowWidth, windowHeight);
     gameWindow.setSize(this.windowWidth,this.windowHeight);
-    gameWindow.setVisible(true);
     gameWindow.setLocationRelativeTo(null);
     gameWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     gameWindow.addKeyListener(this);
     gameWindow.add(this);
+    gameWindow.setVisible(true);
     
     //Set Paddles
     this.paddleWidth = paddleWidth;
@@ -82,6 +84,10 @@ public class GameWindow extends JPanel implements KeyListener{
     userInput = 0;
     moveDirection = 0;
     randY = new Random();
+
+    //Set Barriers
+    this.topBarrier = topBarrier;
+    this.bottombarrier = bottomBarrier;
     
     validate();
   }
@@ -96,6 +102,10 @@ public class GameWindow extends JPanel implements KeyListener{
     g.setColor(Color.RED);
     g.fillRect(playerPaddle.getXPosition(), playerPaddle.getYPosition(), playerPaddle.getPaddleWidth(), playerPaddle.getPaddleHeight());
     g.fillRect(pcPaddle.getXPosition(), pcPaddle.getYPosition(), pcPaddle.getPaddleWidth(), pcPaddle.getPaddleHeight());
+
+    //Draw Barriers
+    g.drawLine(0, topBarrier, windowWidth, topBarrier);
+    g.drawLine(0, bottombarrier, windowWidth, bottombarrier);
     
     //Paint Ball
     g.setColor(Color.YELLOW);
@@ -125,42 +135,9 @@ public class GameWindow extends JPanel implements KeyListener{
     }
   }
   
-  public void changeBallDirectionEasy(){
-    //Player paddle collision detection
-    if (ball.getXPosition() == playerPaddle.getXPosition() && (ball.getYPosition() + ball.getYRadius())> playerPaddle.getYPosition() && 
-        ball.getYPosition() < (playerPaddle.getYPosition() + playerPaddle.getPaddleHeight())){
-      ballXDirection = -1 * ballXDirection;
-      if (ballYDirection > (originalBallYSpeed + 5) ||  ballYDirection < (( -1 * originalBallYSpeed) - 5))
-        ballYDirection = -1 * originalBallYSpeed;
-      else
-        ballYDirection = -1 * (ballYDirection + randY.nextInt(3));
-    }
-    
-    //Pc paddle collision detection
-    if ((ball.getXPosition() + ball.getXRadius()) == pcPaddle.getXPosition() && (ball.getYPosition() + ball.getYRadius()) > pcPaddle.getYPosition() && 
-        ball.getYPosition() < (pcPaddle.getYPosition() + pcPaddle.getPaddleHeight())){
-      ballXDirection = -1 * ballXDirection;
-      if (ballYDirection > (originalBallYSpeed + 5) ||  ballYDirection < (( -1 * originalBallYSpeed) - 5))
-        ballYDirection = -1 * originalBallYSpeed;
-      else
-        ballYDirection = -1 * (ballYDirection + randY.nextInt(3));
-    }
-    
-    //Wall collision detection detection
-    if (ball.isBallGreaterThanWindowWidth() == true)
-      ballXDirection = -1 * ballXDirection;
-    if (ball.isBallLessThanWindowWidth() == true)
-      ballXDirection = -1 * ballXDirection; 
-    if (ball.isBallGreaterThanWindowHeight() == true)
-      ballYDirection = -1 * (ballYDirection + randY.nextInt(3));
-    if (ball.isBallLessThanWindowHeight() == true)
-      ballYDirection = -1 * (ballYDirection + randY.nextInt(3)); 
-    
-    ball.setXPosition(ballXDirection);
-    ball.setYPosition(ballYDirection);
-  }
+
   
-  public void changeBallDirectionHard(){
+  public void changeBallDirection(){
     //Player paddle collision detection
     if (ball.getXPosition() > playerPaddle.getXPosition() && ball.getXPosition() < (playerPaddle.getXPosition() + playerPaddle.getPaddleWidth() - 1) &&  
         (ball.getYPosition() + ball.getYRadius())> playerPaddle.getYPosition() && ball.getYPosition() < (playerPaddle.getYPosition() + playerPaddle.getPaddleHeight())){
@@ -182,14 +159,17 @@ public class GameWindow extends JPanel implements KeyListener{
     }
       
     //Wall collision detection detection
-    if (ball.isBallGreaterThanWindowWidth() == true)
-      ball.resetXPosition(1);
-    if (ball.isBallLessThanWindowWidth() == true)
-      ball.resetXPosition(windowWidth - ballXRadius - 25); 
-    if (ball.isBallGreaterThanWindowHeight() == true)
-      ball.resetYPosition(1);
-    if (ball.isBallLessThanWindowHeight() == true)
-      ball.resetYPosition(windowHeight - ballXRadius - 60 ); 
+    if (ball.getYPosition() < topBarrier || (ball.getYPosition() + ball.getYRadius()) > bottombarrier)
+      ballYDirection = -1 * (ballYDirection);
+    if (ball.isBallGreaterThanWindowWidth())
+       ball.resetXPosition(1);
+    if (ball.isBallLessThanWindowWidth())
+       ball.resetXPosition(windowWidth - ballXRadius - 25);
+    if (ball.isBallGreaterThanWindowHeight())
+       ball.resetYPosition(1);
+    if (ball.isBallLessThanWindowHeight())
+       ball.resetYPosition(windowHeight - ballXRadius - 60 );
+
 
     ball.setXPosition(ballXDirection);
     ball.setYPosition(ballYDirection);
