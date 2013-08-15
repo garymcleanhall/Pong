@@ -116,11 +116,11 @@ public class GameWindow extends JPanel implements KeyListener{
   
 
   public void changePlayerPaddleDirection(){
-    if (userInput == 38)
+    if (userInput == KeyEvent.VK_UP)
       moveDirection = -3;
-    if (userInput == 40)
+    if (userInput == KeyEvent.VK_DOWN)
       moveDirection = 3;
-    if (userInput == 0)
+    if (userInput == KeyEvent.CHAR_UNDEFINED)
       moveDirection = 0;
     playerPaddle.setYPosition(moveDirection);
   }
@@ -176,7 +176,7 @@ public class GameWindow extends JPanel implements KeyListener{
   }
   
   public boolean isExit(){
-    if (userInput == 27)
+    if (userInput == KeyEvent.VK_ESCAPE)
       return true;
     else
       return false;
