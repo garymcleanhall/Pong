@@ -44,6 +44,7 @@ public class GameWindow extends JPanel implements KeyListener{
   private int topBarrier;
   private int bottombarrier;
 
+  private static int MOVEMENTSPEED = 3;
   
   public GameWindow(int windowWidth, int windowHeight, int paddleWidth, int paddleHeight, int ballXRadius, int ballYRadius, int ballXSpeed, int ballYSpeed, int topBarrier, int bottomBarrier){
     //Set Window
@@ -117,9 +118,9 @@ public class GameWindow extends JPanel implements KeyListener{
 
   public void changePlayerPaddleDirection(){
     if (userInput == KeyEvent.VK_UP)
-      moveDirection = -3;
+      moveDirection = -MOVEMENTSPEED;
     if (userInput == KeyEvent.VK_DOWN)
-      moveDirection = 3;
+      moveDirection = MOVEMENTSPEED;
     if (userInput == KeyEvent.CHAR_UNDEFINED)
       moveDirection = 0;
     playerPaddle.setYPosition(moveDirection);
@@ -127,9 +128,9 @@ public class GameWindow extends JPanel implements KeyListener{
   
   public void changePCPaddleDirection(){
     if (pcPaddle.getYPosition()  > ball.getYPosition()){
-      pcPaddle.resetYPosition(pcPaddle.getYPosition() - 3);
+      pcPaddle.resetYPosition(pcPaddle.getYPosition() - MOVEMENTSPEED);
     } else if (pcPaddle.getYPosition() + (pcPaddle.getPaddleHeight() / 2) < ball.getYPosition()){
-      pcPaddle.resetYPosition(pcPaddle.getYPosition() + 3);
+      pcPaddle.resetYPosition(pcPaddle.getYPosition() + MOVEMENTSPEED);
     } else {
       pcPaddle.setYPosition(ballYDirection);
     }
@@ -145,7 +146,7 @@ public class GameWindow extends JPanel implements KeyListener{
       if (ballYDirection > (originalBallYSpeed + 5) ||  ballYDirection < (( -1 * originalBallYSpeed) - 5))
         ballYDirection = -1 * originalBallYSpeed;
       else
-        ballYDirection = -1 * (ballYDirection + randY.nextInt(3));
+        ballYDirection = -1 * (ballYDirection + randY.nextInt(MOVEMENTSPEED));
     }
     
     //Pc paddle collision detection
@@ -155,7 +156,7 @@ public class GameWindow extends JPanel implements KeyListener{
       if (ballYDirection > (originalBallYSpeed + 5) ||  ballYDirection < (( -1 * originalBallYSpeed) - 5))
         ballYDirection = -1 * originalBallYSpeed;
       else
-        ballYDirection = -1 * (ballYDirection + randY.nextInt(3));
+        ballYDirection = -1 * (ballYDirection + randY.nextInt(MOVEMENTSPEED));
     }
       
     //Wall collision detection detection
