@@ -22,6 +22,7 @@ public class GameWindow extends JPanel implements KeyListener{
   Paddle pcPaddle;
   Ball ball;
   Random randY;
+  BallDrawable ballDrawable;
   
   //Class Variables
   private int windowWidth;
@@ -79,6 +80,7 @@ public class GameWindow extends JPanel implements KeyListener{
     
     //Create Ball
     ball = new Ball(ballXStart, ballYStart, ballXRadius, ballYRadius, this.windowWidth, this.windowHeight);
+	ballDrawable = new BallDrawable(ball);
     
     //Set Other variables
     userInput = 0;
@@ -108,8 +110,7 @@ public class GameWindow extends JPanel implements KeyListener{
     g.drawLine(0, bottombarrier, windowWidth, bottombarrier);
     
     //Paint Ball
-    g.setColor(Color.YELLOW);
-    g.fillOval(ball.getXPosition(), ball.getYPosition(), ball.getXRadius(), ball.getYRadius());
+    ballDrawable.Draw(g);
     
     repaint();
   }
