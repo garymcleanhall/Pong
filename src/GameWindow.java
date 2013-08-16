@@ -13,6 +13,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Random;
+import java.util.List;
+import java.util.ArrayList;
 
 public class GameWindow extends JPanel implements KeyListener{
   
@@ -49,7 +51,8 @@ public class GameWindow extends JPanel implements KeyListener{
   private int pcStartYPosition;
   private int topBarrierY;
   private int bottombarrierY;
-
+  
+  private List<Drawable> drawables;
   
   public GameWindow(int windowWidth, int windowHeight, int paddleWidth, int paddleHeight, int ballXRadius, int ballYRadius, int ballXSpeed, int ballYSpeed, int topBarrierY, int bottomBarrierY){
     //Set Window
@@ -64,6 +67,8 @@ public class GameWindow extends JPanel implements KeyListener{
     gameWindow.add(this);
     gameWindow.setVisible(true);
     
+	drawables = new ArrayList<Drawable>();
+	
     //Set Paddles
     this.paddleWidth = paddleWidth;
     this.paddleHeight = paddleHeight;
@@ -100,6 +105,12 @@ public class GameWindow extends JPanel implements KeyListener{
 	
 	this.topBarrier = new BarrierDrawable(windowWidth, topBarrierY);
 	this.bottomBarrier = new BarrierDrawable(windowWidth, bottomBarrierY);
+	
+	drawables.add(playerPaddleDrawable);
+	drawables.add(pcPaddleDrawable);
+	drawables.add(ballDrawable);
+	drawables.add(topBarrier);
+	drawables.add(bottomBarrier);
     
     validate();
   }
@@ -110,16 +121,9 @@ public class GameWindow extends JPanel implements KeyListener{
     g.setColor(Color.BLACK);
     g.fillRect(0,0,windowWidth,windowHeight);
     
-    //Paint Paddles
-    playerPaddleDrawable.Draw(g);
-	pcPaddleDrawable.Draw(g);
-
-    //Draw Barriers
-    topBarrier.Draw(g);
-    bottomBarrier.Draw(g);
-    
-    //Paint Ball
-    ballDrawable.Draw(g);
+    for(Drawable drawable : drawables) {
+		drawable.Draw(g);
+	}
     
     repaint();
   }
