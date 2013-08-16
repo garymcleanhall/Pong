@@ -26,6 +26,8 @@ public class GameWindow extends JPanel implements KeyListener{
   BallDrawable ballDrawable;
   PaddleDrawable playerPaddleDrawable;
   PaddleDrawable pcPaddleDrawable;
+  BarrierDrawable topBarrier;
+  BarrierDrawable bottomBarrier;
   
   //Class Variables
   private int windowWidth;
@@ -45,11 +47,11 @@ public class GameWindow extends JPanel implements KeyListener{
   private int playerStartYPosition;
   private int pcStartXPosition; 
   private int pcStartYPosition;
-  private int topBarrier;
-  private int bottombarrier;
+  private int topBarrierY;
+  private int bottombarrierY;
 
   
-  public GameWindow(int windowWidth, int windowHeight, int paddleWidth, int paddleHeight, int ballXRadius, int ballYRadius, int ballXSpeed, int ballYSpeed, int topBarrier, int bottomBarrier){
+  public GameWindow(int windowWidth, int windowHeight, int paddleWidth, int paddleHeight, int ballXRadius, int ballYRadius, int ballXSpeed, int ballYSpeed, int topBarrierY, int bottomBarrierY){
     //Set Window
     gameWindow = new JFrame("Pong");
     this.windowWidth = windowWidth;
@@ -93,8 +95,11 @@ public class GameWindow extends JPanel implements KeyListener{
     randY = new Random();
 
     //Set Barriers
-    this.topBarrier = topBarrier;
-    this.bottombarrier = bottomBarrier;
+    this.topBarrierY = topBarrierY;
+    this.bottombarrierY = bottomBarrierY;
+	
+	this.topBarrier = new BarrierDrawable(windowWidth, topBarrierY);
+	this.bottomBarrier = new BarrierDrawable(windowWidth, bottomBarrierY);
     
     validate();
   }
@@ -110,8 +115,8 @@ public class GameWindow extends JPanel implements KeyListener{
 	pcPaddleDrawable.Draw(g);
 
     //Draw Barriers
-    g.drawLine(0, topBarrier, windowWidth, topBarrier);
-    g.drawLine(0, bottombarrier, windowWidth, bottombarrier);
+    topBarrier.Draw(g);
+    bottomBarrier.Draw(g);
     
     //Paint Ball
     ballDrawable.Draw(g);
@@ -164,7 +169,7 @@ public class GameWindow extends JPanel implements KeyListener{
     }
       
     //Wall collision detection detection
-    if (ball.getYPosition() < topBarrier || (ball.getYPosition() + ball.getYRadius()) > bottombarrier)
+    if (ball.getYPosition() < topBarrierY || (ball.getYPosition() + ball.getYRadius()) > bottombarrierY)
       ballYDirection = -1 * (ballYDirection);
     if (ball.isBallGreaterThanWindowWidth())
        ball.resetXPosition(1);
